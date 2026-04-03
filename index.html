@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Sesuatu Untuk Bebee ❤️</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="bunga-flower.css" />
+
+    <style>
+      /* === RESET & BASE STYLES === */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #fce4ec, #f3e5f5, #ffe0b2);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #4a4a4a;
+      }
+      .fade-out {
+        opacity: 0 !important;
+        transition: opacity 1s ease-out;
+        pointer-events: none;
+      }
+
+      /* === 1. LAYAR INTRO === */
+      #intro-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        cursor: pointer;
+      }
+      .intro-title {
+        font-size: 1.2rem;
+        color: #888;
+        margin-bottom: 20px;
+      }
+      .beating-hero-heart {
+        color: #ff1744;
+        font-size: 8rem;
+        animation: heartBeatMain 1.5s infinite ease-in-out;
+        user-select: none;
+      }
+      @keyframes heartBeatMain {
+        0%,
+        30%,
+        60%,
+        100% {
+          transform: scale(1);
+        }
+        15% {
+          transform: scale(1.15);
+        }
+        45% {
+          transform: scale(1.1);
+        }
+      }
+
+      /* === 2. MAIN CONTENT (BACKGROUND & TEXT) === */
+      .main-content {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .floating-hearts {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+      }
+      .main-content.show .floating-hearts {
+        opacity: 1;
+      }
+      .heart-icon {
+        position: absolute;
+        bottom: -10%;
+        color: rgba(255, 77, 109, 0.5);
+        font-size: 20px;
+        animation: floatUp linear infinite;
+      }
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-110vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .main-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -40%); /* geser sedikit ke atas */
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 90%;
+        width: 500px;
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transition:
+          opacity 1s ease 0.5s,
+          transform 1s ease 0.5s;
+      }
+      .main-container.show {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      h1.title {
+        font-family: "Dancing Script", cursive;
+        font-size: 3.5rem;
+        color: #ff4d6d;
+        margin-bottom: 20px;
+      }
+      .typing-container {
+        font-size: 1.1rem;
+        min-height: 80px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .btn {
+        background: linear-gradient(45deg, #ff758c, #ff7eb3);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+        transition: transform 0.3s;
+        display: none;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 117, 140, 0.6);
+      }
+
+      /* === 3. MODAL (POP-UP) 3 GAMBAR === */
+      #modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+      }
+      #modal.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        max-width: 95%;
+        width: 650px;
+        transform: scale(0.8);
+        transition: transform 0.5s ease;
+        position: relative;
+      }
+      #modal.active .modal-content {
+        transform: scale(1);
+      }
+      .modal-content h2 {
+        font-family: "Dancing Script", cursive;
+        color: #ff4d6d;
+        font-size: 2.8rem;
+        margin-bottom: 10px;
+      }
+
+      .gallery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .gallery img {
+        width: 30%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px;
+        border: 3px solid rgba(255, 71, 154, 0.95);
+        box-shadow:
+          0 10px 26px rgba(0, 0, 0, 0.18),
+          0 0 0 1px rgba(255, 126, 179, 0.35),
+          0 0 18px rgba(255, 71, 154, 0.38),
+          0 0 34px rgba(255, 126, 179, 0.25);
+        transition: transform 0.3s ease;
+      }
+      .gallery img.img-left {
+        transform: rotate(-12deg);
+      }
+      .gallery img.img-center {
+        transform: rotate(0deg) scale(1.1);
+        z-index: 2;
+        border-color: rgba(255, 71, 154, 1);
+        box-shadow:
+          0 12px 30px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 126, 179, 0.5),
+          0 0 22px rgba(255, 71, 154, 0.55),
+          0 0 44px rgba(255, 126, 179, 0.35);
+      }
+      .gallery img.img-right {
+        transform: rotate(12deg);
+      }
+      .gallery img:hover {
+        transform: scale(1.15);
+        z-index: 3;
+      }
+
+      .modal-desc {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 20px;
+        padding: 0 10px;
+      }
+
+      .flower-btn {
+        background: #ff4d6d;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-family: "Poppins";
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(255, 77, 109, 0.4);
+        transition: 0.3s;
+        font-weight: 600;
+      }
+      .flower-btn:hover {
+        background: #ff1744;
+        transform: translateY(-2px);
+      }
+
+      .flower-flying-sources {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Partikel cahaya halaman bunga (muncul dari bawah ke atas) */
+      #flower-screen .flower-sparkle-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 15;
+        overflow: hidden;
+      }
+      #flower-screen .flower-sparkle {
+        position: absolute;
+        bottom: -5%;
+        left: var(--sx, 50%);
+        width: var(--size, 4px);
+        height: var(--size, 4px);
+        border-radius: 50%;
+        background: var(--sparkle-color, #fffde7);
+        box-shadow:
+          0 0 6px var(--sparkle-color, #fff9c4),
+          0 0 12px rgba(255, 255, 255, 0.6);
+        opacity: 0;
+        will-change: transform, opacity;
+        animation: flower-sparkle-rise var(--dur, 7s) linear forwards;
+        animation-delay: var(--delay, 0s);
+      }
+      #flower-screen .flower-sparkle--star {
+        border-radius: 1px;
+        transform: rotate(45deg);
+        box-shadow:
+          0 0 4px var(--sparkle-color, #fff),
+          0 0 10px rgba(255, 236, 179, 0.8);
+      }
+      @keyframes flower-sparkle-rise {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 0;
+        }
+        8% {
+          opacity: var(--peak, 0.95);
+        }
+        55% {
+          opacity: var(--mid, 0.75);
+        }
+        85% {
+          opacity: 0.35;
+        }
+        100% {
+          transform: translate3d(var(--drift, 0px), -115vh, 0) scale(0.25);
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #flower-screen .flower-sparkle {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+
+      /* Foto melayang (bawah -> atas) tepat di tengah */
+      #flower-screen .flower-photo-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 17; /* di bawah judul (z-index:18) */
+        overflow: hidden;
+      }
+
+      #flower-screen .flower-flying-photo {
+        position: absolute;
+        left: var(--left, 50%);
+        bottom: -12vh;
+        /* 2× dari ukuran sebelumnya */
+        width: clamp(92px, 18vw, 184px);
+        aspect-ratio: 1 / 1;
+        border-radius: 52px;
+        border: 2px solid rgba(255, 255, 255, 0.92);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.24),
+          0 0 16px rgba(255, 255, 255, 0.55),
+          0 0 34px rgba(255, 255, 255, 0.28);
+        object-fit: cover;
+        transform-origin: center center;
+        transform: translateX(calc(-50% + var(--lx, 0px))) translate3d(0, 0, 0)
+          rotate(var(--rot, 0deg)) scale(0.9);
+        opacity: 0;
+        will-change: transform, opacity;
+        animation: flower-photo-rise var(--dur, 16s) ease-in-out
+          var(--delay, 0s) forwards;
+        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+        pointer-events: auto;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Kemiringan tetap sepanjang animasi (bukan berputar dari 0° → rot) */
+      @keyframes flower-photo-rise {
+        0% {
+          opacity: 0;
+          transform: translateX(calc(-50% + var(--lx, 0px)))
+            translate3d(0, 0, 0) rotate(var(--rot, 0deg)) scale(0.85);
+        }
+        10% {
+          opacity: 0.95;
+        }
+        65% {
+          opacity: 0.65;
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(calc(-50% + var(--lx, 0px)))
+            translate3d(var(--dx, 0px), -130vh, 0) rotate(var(--rot, 0deg))
+            scale(0.35);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #flower-screen .flower-flying-photo {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: translateX(calc(-50% + var(--lx, 0px)))
+            translate3d(0, -30vh, 0) rotate(var(--rot, 0deg)) scale(1) !important;
+        }
+      }
+
+      /* Judul di atas elemen bunga */
+      #flower-screen .flower-love-title {
+        position: absolute;
+        top: max(20px, env(safe-area-inset-top, 0px));
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(92vw, 34rem);
+        margin: 0;
+        padding: 0 14px;
+        text-align: center;
+        z-index: 18;
+        font-family: "Dancing Script", "Poppins", system-ui, sans-serif;
+        font-size: clamp(1.75rem, 5.2vw, 2.75rem);
+        font-weight: 700;
+        line-height: 1.25;
+        color: #fffef8;
+        text-shadow:
+          0 0 28px rgba(255, 220, 150, 0.95),
+          0 0 48px rgba(255, 180, 120, 0.45),
+          0 2px 12px rgba(0, 0, 0, 0.55);
+        pointer-events: none;
+      }
+      #flower-screen .flower-love-title .flower-love-name {
+        display: block;
+        margin-top: 0.28em;
+        font-family: "Poppins", system-ui, sans-serif;
+        /* 2× dari clamp(0.95rem, 3.2vw, 1.35rem) */
+        font-size: clamp(1.9rem, 6.4vw, 2.7rem);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ff4d8a;
+        text-shadow:
+          0 0 22px rgba(255, 105, 180, 0.85),
+          0 0 40px rgba(255, 77, 138, 0.45),
+          0 2px 10px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Pratinjau foto yang ditangkap (halaman bunga) */
+      .flower-photo-catch-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10050;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: max(16px, env(safe-area-inset-top, 0px)) 16px 16px;
+        background: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+      }
+      .flower-photo-catch-modal[hidden] {
+        display: none !important;
+      }
+      .flower-photo-catch-inner {
+        max-width: min(92vw, 760px);
+        max-height: min(88vh, 920px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .flower-photo-catch-inner img {
+        max-width: 100%;
+        max-height: min(88vh, 920px);
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 18px;
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.12);
+      }
+      .flower-photo-catch-close {
+        position: absolute;
+        top: max(12px, env(safe-area-inset-top, 0px));
+        right: max(12px, env(safe-area-inset-right, 0px));
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 1.25rem;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .flower-photo-catch-close:hover {
+        background: rgba(255, 255, 255, 0.28);
+      }
+
+      /* backdrop-filter di iOS sering bikin glitch + beban GPU; pakai overlay gelap saja */
+      @media (pointer: coarse), (max-width: 768px) {
+        .flower-photo-catch-modal {
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          background: rgba(0, 0, 0, 0.9);
+        }
+      }
+
+      /* === AUDIO CONTROLS === */
+      .audio-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 5000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="intro-screen">
+      <div class="intro-title">Hai, tekan love-nya ya bebee...</div>
+      <div class="beating-hero-heart" id="start-btn">❤️</div>
+    </div>
+
+    <div class="main-content" id="main-content-section">
+      <div class="floating-hearts" id="hearts-bg"></div>
+      <div class="main-container" id="main-container-box">
+        <h1 class="title">Hai, Bebee...</h1>
+        <div class="typing-container" id="typing-text"></div>
+        <button class="btn" id="surprise-btn">Klik di sini ya, bebee ❤️</button>
+      </div>
+    </div>
+
+    <div id="modal">
+      <div class="modal-content">
+        <h2>Bebee Cantik...</h2>
+
+        <div class="gallery">
+          <img
+            src="galerimodal/WhatsApp Image 2026-04-03 at 02.54.27 .jpeg"
+            alt="Foto Kiri"
+            class="img-left"
+          />
+          <img
+            src="galerimodal/WhatsApp Image 2026-04-03 at 02.54.27.jpeg"
+            alt="Foto Tengah"
+            class="img-center"
+          />
+          <img
+            src="galerimodal/WhatsApp Image 2026-04-03 at 02.56.18.jpeg"
+            alt="Foto Kanan"
+            class="img-right"
+          />
+        </div>
+
+        <p class="modal-desc">
+          Sebelum itu, aku mau ngucapin thank you ya sayang untuk dua bulan
+          perjalanan hubungan kita walaupun masih sebentar, but there are so
+          many things we’ve learned and gone through together. Makasih sudah
+          selalu ada buat aku, sudah sabar menghadapi aku, dan selalu ngertiin
+          aku. I’m really sorry for my past mistakes sayang, aku janji akan
+          terus berusaha jadi lebih baik lagi dan lagi ke depannya. Semoga ke
+          depannya kita bisa terus bareng, saling jaga, saling ngerti, dan tetap
+          kuat menghadapi apapun ombak yang menghantam. And I also want to say
+          thank you so much, karena sudah cantikkk😍
+        </p>
+        <button class="flower-btn" id="flower-btn">Ambil Bunga 🌸</button>
+      </div>
+    </div>
+
+    <!--
+      15 sumber foto untuk animasi melayang di halaman bunga (folder galeribunga/).
+      Ganti file di folder itu jika ingin mengganti foto — sesuaikan daftar di bawah.
+      Jika #flower-flying-sources tidak punya src valid, skrip memakai gambar dari galeri modal.
+    -->
+    <div
+      id="flower-flying-sources"
+      class="flower-flying-sources"
+      aria-hidden="true"
+    >
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2000.16.07%202.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2000.16.07%203.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2000.16.07.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.36%204.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.37%205.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.37%206.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.38%207.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.38%208.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.39%2010.jpeg"
+        alt=""
+      />
+      <img
+        src="galeribunga/WhatsApp%20Image%202026-04-03%20at%2001.13.39%209.jpeg"
+        alt=""
+      />
+      <img src="galeribunga/gambar11.jpeg" alt="" />
+      <img src="galeribunga/gambar%2012.jpeg" alt="" />
+      <img src="galeribunga/gambar13.jpeg" alt="" />
+      <img src="galeribunga/gambar14.jpeg" alt="" />
+      <img src="galeribunga/gambar15.jpeg" alt="" />
+    </div>
+
+    <div id="flower-screen" class="container">
+      <div class="night"></div>
+      <div
+        class="flower-sparkle-layer"
+        id="flower-sparkle-layer"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="flower-photo-layer"
+        id="flower-photo-layer"
+        aria-hidden="true"
+      ></div>
+      <p class="flower-love-title">
+        I Love You
+        <span class="flower-love-name">Ade Yuliandira <br />💗💗💗 </span>
+      </p>
+      <div class="flowers">
+        <div class="flower flower--1">
+          <div class="flower__leafs flower__leafs--1">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+            <div class="flower__line__leaf flower__line__leaf--5"></div>
+            <div class="flower__line__leaf flower__line__leaf--6"></div>
+          </div>
+        </div>
+
+        <div class="flower flower--2">
+          <div class="flower__leafs flower__leafs--2">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+          </div>
+        </div>
+
+        <div class="flower flower--3">
+          <div class="flower__leafs flower__leafs--3">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+          </div>
+        </div>
+
+        <div class="grow-ans" style="--d: 1.2s">
+          <div class="flower__g-long">
+            <div class="flower__g-long__top"></div>
+            <div class="flower__g-long__bottom"></div>
+          </div>
+        </div>
+
+        <div class="growing-grass">
+          <div class="flower__grass flower__grass--1">
+            <div class="flower__grass--top"></div>
+            <div class="flower__grass--bottom"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+            <div class="flower__grass__overlay"></div>
+          </div>
+        </div>
+
+        <div class="growing-grass">
+          <div class="flower__grass flower__grass--2">
+            <div class="flower__grass--top"></div>
+            <div class="flower__grass--bottom"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+            <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+            <div class="flower__grass__overlay"></div>
+          </div>
+        </div>
+
+        <div class="grow-ans" style="--d: 2.4s">
+          <div class="flower__g-right flower__g-right--1">
+            <div class="leaf"></div>
+          </div>
+        </div>
+
+        <div class="grow-ans" style="--d: 2.8s">
+          <div class="flower__g-right flower__g-right--2">
+            <div class="leaf"></div>
+          </div>
+        </div>
+
+        <div class="grow-ans" style="--d: 2.8s">
+          <div class="flower__g-front">
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--1"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--2"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--3"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--4"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--5"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--6"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--7"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div
+              class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--8"
+            >
+              <div class="flower__g-front__leaf"></div>
+            </div>
+            <div class="flower__g-front__line"></div>
+          </div>
+        </div>
+
+        <div class="grow-ans" style="--d: 3.2s">
+          <div class="flower__g-fr">
+            <div class="leaf"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--1"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--2"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--3"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--4"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--5"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--6"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--7"></div>
+            <div class="flower__g-fr__leaf flower__g-fr__leaf--8"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--0">
+          <div class="grow-ans" style="--d: 3s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 2.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.4s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--1">
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.8s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--2">
+          <div class="grow-ans" style="--d: 4s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.4s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--3">
+          <div class="grow-ans" style="--d: 4s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--4">
+          <div class="grow-ans" style="--d: 4s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--5">
+          <div class="grow-ans" style="--d: 4s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--6">
+          <div class="grow-ans" style="--d: 4.2s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.4s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.6s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 4.8s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+
+        <div class="long-g long-g--7">
+          <div class="grow-ans" style="--d: 3s">
+            <div class="leaf leaf--0"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.2s">
+            <div class="leaf leaf--1"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.5s">
+            <div class="leaf leaf--2"></div>
+          </div>
+          <div class="grow-ans" style="--d: 3.6s">
+            <div class="leaf leaf--3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="flower-photo-catch-modal"
+      class="flower-photo-catch-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Lihat foto"
+      hidden
+    >
+      <button
+        type="button"
+        class="flower-photo-catch-close"
+        id="flower-photo-catch-close"
+        aria-label="Tutup"
+      >
+        ✕
+      </button>
+      <div class="flower-photo-catch-inner">
+        <img id="flower-photo-catch-img" src="" alt="Foto yang ditangkap" />
+      </div>
+    </div>
+
+    <audio id="bg-music" loop preload="auto" playsinline webkit-playsinline>
+      <source
+        src="music/Backstreet Boys - Shape of My Heart (Lyrics).mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <button class="audio-control" id="music-btn">🎵</button>
+
+    <script>
+      // --- KONFIGURASI TEKS & WAKTU ---
+      const message =
+        "Aku mau ngasi bunga ke kamu secara virtual nih. Semoga kamu suka apa yang aku buat ini ya bebee hehehe.";
+      const typingSpeed = 65;
+
+      // --- ELEMEN DOM ---
+      const introScreen = document.getElementById("intro-screen");
+      const mainContentSection = document.getElementById(
+        "main-content-section",
+      );
+      const mainContainerBox = document.getElementById("main-container-box");
+      const typingElement = document.getElementById("typing-text");
+      const surpriseBtn = document.getElementById("surprise-btn");
+      const modal = document.getElementById("modal");
+      const flowerBtn = document.getElementById("flower-btn");
+      const flowerScreen = document.getElementById("flower-screen");
+      const flowerSparkleLayer = document.getElementById(
+        "flower-sparkle-layer",
+      );
+      const heartsBg = document.getElementById("hearts-bg");
+      const music = document.getElementById("bg-music");
+      const musicBtn = document.getElementById("music-btn");
+      let isPlaying = false;
+
+      const isTouchLike =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.matchMedia("(hover: none)").matches ||
+        "ontouchstart" in window;
+
+      if (music) {
+        music.setAttribute("playsinline", "");
+        music.volume = 1;
+      }
+
+      // --- 1. MULAI (sentuh / klik / keyboard) — aman di mobile ---
+      let typingStarted = false;
+      let introDone = false;
+
+      function tryPlayMusic() {
+        const p = music.play();
+        if (p !== undefined) {
+          p.then(() => {
+            musicBtn.innerHTML = "⏸️";
+            isPlaying = true;
+          }).catch(() => {
+            musicBtn.innerHTML = "🎵";
+            isPlaying = false;
+          });
+        }
+      }
+
+      /* Safari/iOS sering menjeda audio saat tab tidak aktif / layar mati — lanjutkan lagi saat kembali */
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState !== "visible") return;
+        if (!isPlaying || !music.paused) return;
+        tryPlayMusic();
+      });
+      window.addEventListener("focus", () => {
+        if (!isPlaying || !music.paused) return;
+        tryPlayMusic();
+      });
+
+      /* iOS/Android kadang menjeda audio saat decode gambar besar — coba lanjut jika bukan user yang pause */
+      let musicResumeTimer = null;
+      music.addEventListener("pause", () => {
+        if (!isPlaying) return;
+        if (document.visibilityState !== "visible" || document.hidden) return;
+        clearTimeout(musicResumeTimer);
+        musicResumeTimer = window.setTimeout(() => {
+          if (isPlaying && music.paused) tryPlayMusic();
+        }, 150);
+      });
+
+      function beginFromIntro() {
+        if (introDone) return;
+        introDone = true;
+        introScreen.classList.add("fade-out");
+        setTimeout(() => {
+          introScreen.style.display = "none";
+          mainContentSection.style.display = "block";
+          void mainContentSection.offsetWidth;
+          mainContentSection.classList.add("show");
+          mainContainerBox.classList.add("show");
+
+          if (!typingStarted) {
+            startTyping();
+            typingStarted = true;
+          }
+
+          if (music.paused) tryPlayMusic();
+        }, 1000);
+      }
+
+      introScreen.addEventListener("pointerup", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        beginFromIntro();
+      });
+      introScreen.addEventListener("click", () => {
+        beginFromIntro();
+      });
+      introScreen.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          beginFromIntro();
+        }
+      });
+
+      // --- 2. EFEK MENGETIK ---
+      let i = 0;
+      function startTyping() {
+        if (i < message.length) {
+          typingElement.innerHTML += message.charAt(i);
+          i++;
+          setTimeout(startTyping, typingSpeed);
+        } else {
+          surpriseBtn.style.display = "inline-block";
+        }
+      }
+
+      // --- 3. BACKGROUND HEART ---
+      function createHeart() {
+        if (mainContentSection.style.display === "none") return;
+        const heart = document.createElement("div");
+        heart.classList.add("heart-icon");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 3 + 5 + "s";
+        heart.style.fontSize = Math.random() * 15 + 10 + "px";
+        heartsBg.appendChild(heart);
+        setTimeout(() => {
+          heart.remove();
+        }, 8000);
+      }
+      setInterval(createHeart, 400);
+
+      // --- 4. TOMBOL KEJUTAN (MODAL & CONFETTI) ---
+      surpriseBtn.addEventListener("click", () => {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ["#ff4d6d", "#ff7eb3", "#fce4ec", "#ffffff"],
+        });
+        setTimeout(() => {
+          modal.classList.add("active");
+        }, 500);
+      });
+
+      // --- 5. LOGIKA AMBIL BUNGA (PINDAH KE HALAMAN BUNGA) ---
+      flowerBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+        mainContentSection.style.display = "none";
+        // Sama seperti main.js di bunga-flower: mulai dari paused lalu mainkan animasi
+        flowerScreen.classList.add("container");
+        flowerScreen.style.display = "flex";
+        void flowerScreen.offsetWidth;
+        flowerScreen.classList.remove("container");
+
+        /* Preload decode dulu — hindari foto baru decode barengan yang sering memutus audio di HP */
+        preloadFlyingPhotoSources().then(() => {
+          startFlowerFlyingPhotos();
+        });
+      });
+
+      // --- Foto melayang dari bawah ke atas (15 foto per batch, berulang) ---
+      let photoFloatTimeoutId = null;
+      const photoSpawnTimeoutIds = new Set();
+      const flowerPhotoLayer = document.getElementById("flower-photo-layer");
+      const PHOTO_BATCH_SIZE = 15;
+      /* Jarak antar foto dalam 1 batch (bukan detik!). Nilai ~7500ms sebelumnya = bug → delay & tabrakan batch. */
+      const PHOTO_FLOAT_FIRST_DELAY_MS = isTouchLike ? 2600 : 4200;
+      const PHOTO_STAGGER_MS = isTouchLike ? 450 : 520;
+      const PHOTO_FLOAT_REPEAT_MS = Math.max(
+        14000,
+        (Math.min(PHOTO_BATCH_SIZE, 20) - 1) * PHOTO_STAGGER_MS + 4000,
+      );
+
+      function getFlyingPhotoSources() {
+        const fromGaleriBunga = Array.from(
+          document.querySelectorAll("#flower-flying-sources img"),
+        )
+          .map((img) => img.getAttribute("src"))
+          .filter(Boolean);
+        if (fromGaleriBunga.length > 0) return fromGaleriBunga;
+        return Array.from(document.querySelectorAll("#modal .gallery img"))
+          .map((img) => img.getAttribute("src"))
+          .filter(Boolean);
+      }
+
+      function preloadFlyingPhotoSources() {
+        const urls = getFlyingPhotoSources();
+        if (urls.length === 0) return Promise.resolve();
+        return Promise.all(
+          urls.map(
+            (src) =>
+              new Promise((resolve) => {
+                const im = new Image();
+                im.decoding = "async";
+                im.onload = () => {
+                  if (typeof im.decode === "function") {
+                    im.decode().then(resolve).catch(resolve);
+                  } else {
+                    resolve();
+                  }
+                };
+                im.onerror = resolve;
+                im.src = src;
+              }),
+          ),
+        );
+      }
+
+      function spawnFlyingPhotoBatch() {
+        if (flowerScreen.style.display !== "flex" || !flowerPhotoLayer) {
+          return;
+        }
+        const photoCandidates = getFlyingPhotoSources();
+        if (photoCandidates.length === 0) return;
+
+        // 1 foto hanya muncul 1× per batch (anti-double dalam satu batch)
+        const shuffled = photoCandidates.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        const count = Math.min(PHOTO_BATCH_SIZE, shuffled.length);
+
+        for (let i = 0; i < count; i++) {
+          const t = window.setTimeout(() => {
+            photoSpawnTimeoutIds.delete(t);
+            if (flowerScreen.style.display !== "flex" || !flowerPhotoLayer) {
+              return;
+            }
+
+            const img = document.createElement("img");
+            img.className = "flower-flying-photo";
+            img.src = shuffled[i];
+            img.loading = "eager";
+            img.decoding = "async";
+            img.draggable = false;
+
+            // Titik muncul: sedikit kiri / tengah / sedikit kanan (biar ga selalu dari tengah)
+            const lanePick = Math.random();
+            let leftPct = 50;
+            if (lanePick < 0.34) {
+              leftPct = 34 + Math.random() * 12; // kiri bawah
+            } else if (lanePick < 0.68) {
+              leftPct = 46 + Math.random() * 8; // tengah bawah
+            } else {
+              leftPct = 54 + Math.random() * 12; // kanan bawah
+            }
+
+            const dx = (Math.random() - 0.5) * 85;
+            const lx = (Math.random() - 0.5) * 100;
+            let rotDeg = 0;
+            const tiltPick = Math.random();
+            if (tiltPick < 0.28) {
+              rotDeg = 0;
+            } else if (tiltPick < 0.64) {
+              rotDeg = -(14 + Math.random() * 10);
+            } else {
+              rotDeg = 14 + Math.random() * 10;
+            }
+
+            const dur = 12 + Math.random() * 10;
+
+            img.style.setProperty("--left", leftPct.toFixed(2) + "%");
+            img.style.setProperty("--dx", dx.toFixed(1) + "px");
+            img.style.setProperty("--lx", lx.toFixed(1) + "px");
+            img.style.setProperty("--rot", rotDeg.toFixed(1) + "deg");
+            img.style.setProperty("--dur", dur.toFixed(2) + "s");
+            img.style.setProperty("--delay", "0s");
+
+            flowerPhotoLayer.appendChild(img);
+
+            const removeT = window.setTimeout(
+              () => {
+                if (img.isConnected) img.remove();
+              },
+              (dur + 0.45) * 1000,
+            );
+
+            img.addEventListener(
+              "pointerup",
+              (ev) => {
+                if (ev.pointerType === "mouse" && ev.button !== 0) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                window.clearTimeout(removeT);
+                openFlowerPhotoCatchModal(img.src);
+                img.remove();
+              },
+              { passive: false },
+            );
+          }, i * PHOTO_STAGGER_MS);
+          photoSpawnTimeoutIds.add(t);
+        }
+      }
+
+      const flowerPhotoCatchModal = document.getElementById(
+        "flower-photo-catch-modal",
+      );
+      const flowerPhotoCatchImg = document.getElementById(
+        "flower-photo-catch-img",
+      );
+      const flowerPhotoCatchClose = document.getElementById(
+        "flower-photo-catch-close",
+      );
+
+      function openFlowerPhotoCatchModal(src) {
+        if (!flowerPhotoCatchModal || !flowerPhotoCatchImg || !src) return;
+        flowerPhotoCatchImg.src = src;
+        flowerPhotoCatchModal.removeAttribute("hidden");
+      }
+
+      function closeFlowerPhotoCatchModal() {
+        if (!flowerPhotoCatchModal || !flowerPhotoCatchImg) return;
+        flowerPhotoCatchModal.setAttribute("hidden", "");
+        flowerPhotoCatchImg.removeAttribute("src");
+      }
+
+      if (flowerPhotoCatchClose) {
+        flowerPhotoCatchClose.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeFlowerPhotoCatchModal();
+        });
+      }
+      if (flowerPhotoCatchModal) {
+        flowerPhotoCatchModal.addEventListener("click", (e) => {
+          if (e.target === flowerPhotoCatchModal) closeFlowerPhotoCatchModal();
+        });
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if (
+          flowerPhotoCatchModal &&
+          !flowerPhotoCatchModal.hasAttribute("hidden")
+        ) {
+          closeFlowerPhotoCatchModal();
+        }
+      });
+
+      function startFlowerFlyingPhotos() {
+        if (!flowerPhotoLayer || photoFloatTimeoutId !== null) return;
+
+        const schedule = (delayMs) => {
+          photoFloatTimeoutId = window.setTimeout(() => {
+            photoFloatTimeoutId = null;
+            if (flowerScreen.style.display !== "flex") return;
+            spawnFlyingPhotoBatch();
+            schedule(PHOTO_FLOAT_REPEAT_MS);
+          }, delayMs);
+        };
+
+        schedule(PHOTO_FLOAT_FIRST_DELAY_MS);
+      }
+
+      function stopFlowerFlyingPhotos() {
+        if (photoFloatTimeoutId !== null) {
+          window.clearTimeout(photoFloatTimeoutId);
+          photoFloatTimeoutId = null;
+        }
+        for (const t of photoSpawnTimeoutIds) {
+          window.clearTimeout(t);
+        }
+        photoSpawnTimeoutIds.clear();
+      }
+
+      // Partikel cahaya di halaman bunga (bawah → atas)
+      const sparkleColors = [
+        "#fffde7",
+        "#fff9c4",
+        "#ffecb3",
+        "#ffe082",
+        "#ffffff",
+        "#fce4ec",
+      ];
+      function spawnFlowerSparkle() {
+        if (flowerScreen.style.display !== "flex" || !flowerSparkleLayer) {
+          return;
+        }
+        const el = document.createElement("span");
+        el.className = "flower-sparkle";
+        if (Math.random() < 0.28) {
+          el.classList.add("flower-sparkle--star");
+        }
+        const size = 2 + Math.random() * 7;
+        const leftPct = Math.random() * 100;
+        const drift = (Math.random() - 0.5) * 80;
+        const dur = 6 + Math.random() * 7;
+        const delay = Math.random() * 0.35;
+        const col =
+          sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+        el.style.setProperty("--sx", leftPct + "%");
+        el.style.setProperty("--size", size + "px");
+        el.style.setProperty("--drift", drift + "px");
+        el.style.setProperty("--dur", dur + "s");
+        el.style.setProperty("--delay", delay + "s");
+        el.style.setProperty("--sparkle-color", col);
+        el.style.setProperty(
+          "--peak",
+          (0.75 + Math.random() * 0.22).toFixed(2),
+        );
+        el.style.setProperty("--mid", (0.45 + Math.random() * 0.35).toFixed(2));
+        flowerSparkleLayer.appendChild(el);
+        window.setTimeout(() => el.remove(), (dur + delay + 0.5) * 1000);
+      }
+      const sparkleTickMs = isTouchLike ? 380 : 180;
+      setInterval(() => {
+        if (flowerScreen.style.display !== "flex") return;
+        const n = isTouchLike ? 1 : 1 + Math.floor(Math.random() * 2);
+        for (let k = 0; k < n; k++) spawnFlowerSparkle();
+      }, sparkleTickMs);
+
+      // --- 6. AUDIO ---
+      musicBtn.addEventListener("click", () => {
+        if (isPlaying) {
+          isPlaying = false;
+          music.pause();
+          musicBtn.innerHTML = "🎵";
+        } else {
+          tryPlayMusic();
+        }
+      });
+    </script>
+  </body>
+</html>
